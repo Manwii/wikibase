@@ -1,11 +1,11 @@
 version: '3.7'
+
 services:
   wikibase:
-    platform: linux/arm64
     build:
       context: .
-      dockerfile: wikibase.Dockerfile.custom
-    
+      dockerfile: wikibase.Dockerfile
+    platform: linux/amd64
     container_name: wikibase-wikibase
     restart: unless-stopped
     ports:
@@ -26,19 +26,15 @@ services:
       - DB_PASS=my_wiki_user_password
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://localhost:9090
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       timeout: 5s
       retries: 5
     volumes:
       - wikibase-images:/var/www/html/images
-      - ./LocalSettings.php:/var/www/html/LocalSettings.php
 
   wikibase-jobrunner:
-    build:
-      context: .
-      dockerfile: wikibase.Dockerfile
-    
+    image: wikibase/wikibase-bundle:1.39.5-wmde.13
     container_name: wikibase-jobrunner
     restart: unless-stopped
     command: php /var/www/html/maintenance/runJobs.php
@@ -47,8 +43,11 @@ services:
     volumes:
       - wikibase-images:/var/www/html/images
 
+
+
   mariadb:
     image: mariadb:10.11
+    platform: linux/amd64
     container_name: wikibase-mariadb
     restart: unless-stopped
     environment:
@@ -58,19 +57,21 @@ services:
       - MYSQL_PASSWORD=my_wiki_user_password
     volumes:
       - wikibase-mysql-data:/var/lib/mysql
-  
+
   quickstatements:
     build:
       context: ./wikibase-docker/quickstatements/latest
       dockerfile: Dockerfile.proper
-    
+    platform: linux/amd64
     container_name: wikibase-quickstatements
     restart: unless-stopped
     ports:
       - "9090:80"
     environment:
-      WB_PUBLIC_SCHEME_HOST_AND_PORT: "http://localhost:8080"
+      OAUTH_CONSUMER_KEY: "c13e7493280326df8d5abf0196f2d908"
+      OAUTH_CONSUMER_SECRET: "4e4811911f3f8d9565f3fef67cc97fe703a4a1d0"
       QS_PUBLIC_SCHEME_HOST_AND_PORT: "http://localhost:9090"
+      WB_PUBLIC_SCHEME_HOST_AND_PORT: "http://localhost:8080"
       WIKIBASE_SCHEME_AND_HOST: "http://wikibase-wikibase"
       WB_PROPERTY_NAMESPACE: "120"
       WB_PROPERTY_PREFIX: "Property:"

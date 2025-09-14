@@ -2,8 +2,7 @@
 /**
  * ----------------------------------------------------------------------------------------
  * This file is provided by the wikibase/wikibase docker image.
- * This file will be passed through envsubst which will replace "$"
- * with "$".
+ * This file will be passed through envsubst which will replace "$" with "$".
  * If you want to change MediaWiki or Wikibase settings then either mount a file over this
  * template and or run a different entrypoint.
  * ----------------------------------------------------------------------------------------
@@ -19,9 +18,9 @@ $wgDBpassword = "my_wiki_user_password";
 ## Logs
 ## Save these logs inside the container
 $wgDebugLogGroups = array(
-	'resourceloader' => '/var/log/mediawiki/resourceloader.log',
-	'exception' => '/var/log/mediawiki/exception.log',
-	'error' => '/var/log/mediawiki/error.log',
+    'resourceloader' => '/var/log/mediawiki/resourceloader.log',
+    'exception' => '/var/log/mediawiki/exception.log',
+    'error' => '/var/log/mediawiki/error.log',
 );
 
 ## Site Settings
@@ -31,13 +30,14 @@ $wgShellLocale = "en_US.utf8";
 $wgLanguageCode = "en";
 $wgSitename = "wikibase-docker";
 $wgMetaNamespace = "Project";
+
 # Configured web paths & short URLs
 # This allows use of the /wiki/* path
 ## https://www.mediawiki.org/wiki/Manual:Short_URL
-$wgScriptPath = "/w";        // this should already have been configured this way
+$wgScriptPath = "/w"; // this should already have been configured this way
 $wgArticlePath = "/wiki/$1";
 
-#Set Secret
+# Set Secret
 $wgSecretKey = "QNCU0syLzEHdUWXP4K5wHEeQ+pqBUX73pPLzKpbud5M=";
 
 ## RC Age
@@ -56,11 +56,11 @@ require_once "$IP/extensions/Wikibase/repo/ExampleSettings.php";
 require_once "$IP/extensions/Wikibase/client/WikibaseClient.php";
 require_once "$IP/extensions/Wikibase/client/ExampleSettings.php";
 
-# Enable OAuth for QuickStatements
+# OAuth
 wfLoadExtension( 'OAuth' );
 $wgGroupPermissions['sysop']['mwoauthproposeconsumer'] = true;
 $wgGroupPermissions['sysop']['mwoauthmanageconsumer'] = true;
 $wgGroupPermissions['sysop']['mwoauthviewprivate'] = true;
 $wgGroupPermissions['sysop']['mwoauthupdateownconsumer'] = true;
-$wgShowExceptionDetails = true;
 
+$wgShowExceptionDetails = true;

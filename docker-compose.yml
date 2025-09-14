@@ -13,7 +13,7 @@ services:
     depends_on:
       - mariadb
     environment:
-      - MEDIAWIKI_SITE_SERVER=http://localhost:8080
+      - MEDIAWIKI_SITE_SERVER=http://wikibase-wikibase
       - MEDIAWIKI_SITE_NAME=My Wikibase
       - MEDIAWIKI_SITE_LANG=en
       - MW_ADMIN_NAME=admin
@@ -72,7 +72,7 @@ services:
       OAUTH_CONSUMER_SECRET: "4e4811911f3f8d9565f3fef67cc97fe703a4a1d0"
       QS_PUBLIC_SCHEME_HOST_AND_PORT: "http://localhost:9090"
       WB_PUBLIC_SCHEME_HOST_AND_PORT: "http://localhost:8080"
-      WIKIBASE_SCHEME_AND_HOST: "http://wikibase-wikibase"
+      WIKIBASE_SCHEME_AND_HOST: "http://wikibase-wikibase/w/api.php"
       WB_PROPERTY_NAMESPACE: "120"
       WB_PROPERTY_PREFIX: "Property:"
       WB_ITEM_NAMESPACE: "0"

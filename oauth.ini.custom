@@ -1,0 +1,5 @@
+; HTTP User-Agent header
+agent = 'Wikibase Docker QuickStatements'
+; OAuth Consumer credentials
+consumerKey = 'c13e7493280326df8d5abf0196f2d908'
+consumerSecret = '4e4811911f3f8d9565f3fef67cc97fe703a4a1d0'

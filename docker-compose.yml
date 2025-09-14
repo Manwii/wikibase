@@ -1,0 +1,100 @@
+version: '3.7'
+services:
+  wikibase:
+    platform: linux/arm64
+    build:
+      context: .
+      dockerfile: wikibase.Dockerfile.custom
+    
+    container_name: wikibase-wikibase
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    depends_on:
+      - mariadb
+    environment:
+      - MEDIAWIKI_SITE_SERVER=http://localhost:8080
+      - MEDIAWIKI_SITE_NAME=My Wikibase
+      - MEDIAWIKI_SITE_LANG=en
+      - MW_ADMIN_NAME=admin
+      - MW_ADMIN_PASS=wikibase-docker
+      - MW_ADMIN_EMAIL=admin@example.com
+      - MW_WG_SECRET_KEY=QNCU0syLzEHdUWXP4K5wHEeQ+pqBUX73pPLzKpbud5M=
+      - DB_SERVER=mariadb:3306
+      - DB_NAME=my_wiki
+      - DB_USER=my_wiki
+      - DB_PASS=my_wiki_user_password
+      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://localhost:9090
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - wikibase-images:/var/www/html/images
+      - ./LocalSettings.php:/var/www/html/LocalSettings.php
+
+  wikibase-jobrunner:
+    build:
+      context: .
+      dockerfile: wikibase.Dockerfile
+    
+    container_name: wikibase-jobrunner
+    restart: unless-stopped
+    command: php /var/www/html/maintenance/runJobs.php
+    depends_on:
+      - wikibase
+    volumes:
+      - wikibase-images:/var/www/html/images
+
+  mariadb:
+    image: mariadb:10.11
+    container_name: wikibase-mariadb
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=wikibase-docker-very-secret-and-complex-password
+      - MYSQL_DATABASE=my_wiki
+      - MYSQL_USER=my_wiki
+      - MYSQL_PASSWORD=my_wiki_user_password
+    volumes:
+      - wikibase-mysql-data:/var/lib/mysql
+  
+  quickstatements:
+    build:
+      context: ./wikibase-docker/quickstatements/latest
+      dockerfile: Dockerfile.proper
+    
+    container_name: wikibase-quickstatements
+    restart: unless-stopped
+    ports:
+      - "9090:80"
+    environment:
+      WB_PUBLIC_SCHEME_HOST_AND_PORT: "http://localhost:8080"
+      QS_PUBLIC_SCHEME_HOST_AND_PORT: "http://localhost:9090"
+      WIKIBASE_SCHEME_AND_HOST: "http://wikibase-wikibase"
+      WB_PROPERTY_NAMESPACE: "120"
+      WB_PROPERTY_PREFIX: "Property:"
+      WB_ITEM_NAMESPACE: "0"
+      WB_ITEM_PREFIX: ""
+      MW_SITE_NAME: "My Wikibase"
+      MW_SITE_LANG: "en"
+      PHP_TIMEZONE: "UTC"
+    depends_on:
+      - wikibase
+    volumes:
+      - quickstatements-data:/quickstatements/data
+    networks:
+      default:
+        aliases:
+          - quickstatements.svc
+    command: ["/entrypoint-proper.sh"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  wikibase-images:
+  wikibase-mysql-data:
+  quickstatements-data:

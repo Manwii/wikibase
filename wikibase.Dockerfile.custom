@@ -1,0 +1,20 @@
+FROM wikibase/wikibase:latest
+
+# Replace apt sources with archive URLs
+RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list && \
+    sed -i 's/security.debian.org/archive.debian.org/g' /etc/apt/sources.list && \
+    echo "deb http://archive.debian.org/debian-security buster/updates main" >> /etc/apt/sources.list
+
+# Install git and unzip
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip     && rm -rf /var/lib/apt/lists/*
+
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Clone the OAuth extension into the extensions directory
+RUN git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/OAuth /var/www/html/extensions/OAuth
+
+# Navigate into the extension directory and install Composer dependencies
+RUN cd /var/www/html/extensions/OAuth && composer install --no-dev

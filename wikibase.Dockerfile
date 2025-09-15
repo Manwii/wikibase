@@ -9,5 +9,4 @@ RUN set -eux; \
     git clone -b REL1_35 https://gerrit.wikimedia.org/r/mediawiki/extensions/OAuth OAuth; \
     chown -R www-data:www-data /var/www/html/extensions/OAuth
 
-# Run MediaWiki maintenance scripts automatically on build
-RUN php /var/www/html/maintenance/update.php --quick
+

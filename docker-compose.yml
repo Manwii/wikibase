@@ -32,7 +32,8 @@ services:
       retries: 5
     volumes:
       - wikibase-images:/var/www/html/images
-      - ./extensions/OAuth:/var/www/html/extensions/OAuth
+      
+      - ./LocalSettings.custom.php:/var/www/html/LocalSettings.php
 
   wikibase-jobrunner:
     image: wikibase/wikibase-bundle:1.39.5-wmde.13

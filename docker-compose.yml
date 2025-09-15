@@ -70,8 +70,8 @@ services:
     ports:
       - "9090:80"
     environment:
-      OAUTH_CONSUMER_KEY: "c13e7493280326df8d5abf0196f2d908"
-      OAUTH_CONSUMER_SECRET: "4e4811911f3f8d9565f3fef67cc97fe703a4a1d0"
+      OAUTH_CONSUMER_KEY: "acdc4c6b953faa98d0f1773e164b01fa"
+      OAUTH_CONSUMER_SECRET: "73810d304c8867e080faf9cc4f316055ccf504df"
       QS_PUBLIC_SCHEME_HOST_AND_PORT: "http://localhost:9090"
       WB_PUBLIC_SCHEME_HOST_AND_PORT: "http://localhost:8080"
       WIKIBASE_SCHEME_AND_HOST: "http://wikibase-wikibase/w/api.php"

@@ -32,5 +32,10 @@ require_once "$IP/extensions/Wikibase/repo/ExampleSettings.php";
 require_once "$IP/extensions/Wikibase/client/WikibaseClient.php";
 require_once "$IP/extensions/Wikibase/client/ExampleSettings.php";
 
+# OAuth extension
+wfLoadExtension( 'OAuth' );
+$wgMWOAuthSecureTokenTransfer = true;
+
+
 # Skin
 wfLoadSkin( 'Vector' );
